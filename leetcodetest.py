@@ -1,6 +1,91 @@
+#1
+class Solution(object):
+    def twoSumx(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: List[int]
+        """
+        sortedNum = sorted(nums)
+        retList = []
+        i = 0
+        while i < len(nums):
+            nextNum = target - nums[i]
+            if nextNum in sortedNum[i+1:]:
+                retList.append(i)
+                retList.append(sortedNum.index(nextNum))
+            else:
+                i+=1
+        return retList
+    def twoSum(self,nums,target):
+        sortedNums = sorted(nums)
+        i = 0
+        j = len(nums)-1
+        x,y = 0,0
+        while i < j:
+            if(target == sortedNums[i] + sortedNums[j]):
+                x = sortedNums[i]
+                y = sortedNums[j]
+            elif target > sortedNums[i] + sortedNums[j]:
+                i+=1
+            else:
+                j-=1
+        return [nums.index(x) , nums.index(y)]
+
+#2
+# Definition for singly-linked list.
+class ListNode(object):
+     def __init__(self, x):
+         self.val = x
+         self.next = None
+
+class Solution(object):
+    def addTwoNumbers(self, l1, l2):
+        """
+        :type l1: ListNode
+        :type l2: ListNode
+        :rtype: ListNode
+        """
+
+        x = (l1.val +l2.val)%10
+        y = (l1.val + l2.val)/10
+        p = l1
+        q = l2
+        l3 = ListNode(x)
+        r = l3
+        while(p.next is not None and q.next is not None):
+            p = p.next
+            q = q.next
+            tmp = p.val + q.val + y
+            x = tmp%10
+            y = tmp/10
+            nNode = ListNode(x)
+            r.next = nNode
+            r = nNode
+        while p.next is not None:
+            p = p.next
+            tmp = p.val + y
+            x = tmp%10
+            y = tmp/10
+            nNode = ListNode(x)
+            r.next = nNode
+            r = nNode
+        while q.next is not None:
+            q = q.next
+            tmp = q.val + y
+            x = tmp%10
+            y = tmp/10
+            nNode = ListNode(x)
+            r.next = nNode
+            r = nNode
+        if y > 0:
+            nNode = ListNode(y)
+            r.next = nNode
+            r = nNode
+        return l3
 
 
-#20
+#20 ac
 import Queue
 class Solution(object):
   def isValid(self,s):
@@ -12,6 +97,8 @@ class Solution(object):
         l = tmpStack.pop()
         if l+i not in ['()','[]','{}']:
           return False
+    if len(tmpStack) >0:
+        return False
     return True
 
 sol = Solution()
@@ -20,7 +107,9 @@ print sol.isValid("(){}[{]]")
 
 #26
 class Solution(object):
-    def lenOfDuplicate(self,s):
+    def removeDuplicates(self,s):
+        if(len(s)<=0):
+            return
         cnt = 1
         for i in range(1 , len(s) ):
             if(s[i]!=s[i-1]):
@@ -30,7 +119,7 @@ class Solution(object):
 sol = Solution()
 print sol.lenOfDuplicate([1])
 
-#33
+#33 ac
 def binarySearch(s,i,j,k):
     if(i>j):
         return -1
@@ -67,11 +156,11 @@ class Solution(object):
 sol = Solution()
 print sol.search([4,5,6,7,0,1,2],4)
 
-#49
+#49 ac
 class Solution(object):
-    def groupAnagrams(self,s):
+    def groupAnagrams(self,strs):
         xmap = {}
-        for word in s:
+        for word in strs:
             sortedWord = ''.join(sorted(word))
             if(xmap.get(sortedWord) is None):
                 xmap[sortedWord] = [word]
@@ -114,7 +203,7 @@ sol = Solution()
 print sol.letterCombinations('23')
 
 
-#78
+#78 ac
 def subSetDfs(s,i,tmparr,output):
     if i < len(s):
         output.append( tmparr + [s[i]] )
@@ -122,21 +211,22 @@ def subSetDfs(s,i,tmparr,output):
         subSetDfs(s,j,tmparr + [s[i]],output)
 
 class Solution(object):
-    def subSet(s):
+    def subsets(self,nums):
         output = []
         output.append([])
-        for i in range(0,len(s)):
-            subSetDfs(s,i,[],output)
+        for i in range(0,len(nums)):
+            subSetDfs(nums,i,[],output)
         return output
 
 sol = Solution()
 print sol.subSet([1,2,3])
 
-#215
+#215 ac
 def swap(s,x,y):
     t = s[x]
     s[x]=s[y]
     s[y]=t
+
 
 def kthMaxAux(s,i,j,k):
   tmp = s[i]
@@ -154,10 +244,18 @@ def kthMaxAux(s,i,j,k):
   else:
       return kthMaxAux(s,q+1,j,k)
 
-def kthMax(s,k):
-    return kthMaxAux(s,0,len(s),k)
+#
+class Solution(object):
+    def findKthLargest(self, nums, k):
+        """
+        :type nums: List[int]
+        :type k: int
+        :rtype: int
+        """
+        return kthMaxAux(nums,0,len(nums),k)
 
-print kthMax([3,2,1,5,6,4] , 1)
+
+#print kthMax([3,2,1,5,6,4] , 1)
 
 #79 xxx
 directions = [(0,1),(1,0),(-1,0),(0,-1)]
@@ -226,21 +324,24 @@ board = [
 #print sol.search(board,'ABCCED')
 print sol.search(board,'SEE')
 
-#104
+#104 ac
 class TreeNode(object):
     def __int__(self,x):
         self.val=x
         self.left=None
         self.right=None
 
+
 import Queue
 class Solution(object):
     #bfs
     def maxDepth(self,root):
+        if root is None:
+            return 0
         q = Queue.deque()
         q.append(root)
         levelQ = Queue.deque()
-        levelQ.append(0)
+        levelQ.append(1)
         maxLevel = 0
         while len(q) > 0:
             currentNode = q.pop()
