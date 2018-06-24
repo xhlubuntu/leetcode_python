@@ -1,13 +1,15 @@
 #46
+import copy
 
 def perm(A,i,rst):
     length = len(A)
-    if i == length-1:
+    if i == length:
         return
-    for j in range(i+1,length):
-        A[i],A[j] = A[j],A[i]
-        rst.append(A)
-        perm(A,j,rst)
+    for j in range(i,length):
+        A[j], A[i] = A[i], A[j]
+        copyed = copy.copy(A)
+        rst.append(copyed)
+        perm(A,j+1,rst)
         A[i], A[j] = A[j], A[i]
 
 class Solution(object):
